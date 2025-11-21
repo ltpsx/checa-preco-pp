@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checar Preço MAC</title>
+
+<style>
+  :root {
+    --bg: #050505;
+    --card-bg: #1c1c1c;
+    --accent: #ff7b00;
+    --accent2: #ff9c33;
+    --text: #ffffff;
+    --muted: #bbbbbb;
+    --success: #00ff7f;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    height: 100%;
+  }
+
+  /* CONTAINER CENTRALIZADOR REAL */
+  .wrapper {
+    max-width: 420px;
+    margin: 0 auto; /* CENTRALIZA EM QUALQUER CELULAR */
+    padding: 20px 16px 40px;
+  }
+
+  .titulo {
+    text-align: center;
+    font-size: 26px;
+    padding: 14px 10px;
+    margin-bottom: 20px;
+    background: #111;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  }
+
+  input {
+    width: 100%;
+    padding: 18px 12px;
+    font-size: 24px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #101010;
+    text-align: center;
+    outline: none;
+    color: var(--text);
+  }
+
+  button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+  }
+
+  #resultado {
+    background: var(--card-bg);
+    padding: 22px 18px;
+    margin-top: 20px;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.7);
+    display: none;
+    animation: fadein .2s ease-in-out;
+    text-align: center;
+  }
+
+  .preco-bf {
+    color: var(--success);
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0px); }
+  }
+
+</style>
+
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="titulo">
+    🔥 BLACK FRIDAY – MAC ATACADO PP 🔥
+  </div>
+
+  <input type="tel"
+         id="codigo"
+         inputmode="numeric"
+         pattern="[0-9]*"
+         placeholder="Digite o código">
+
+  <button onclick="limpar()">Novo Código</button>
+
+  <div id="resultado"></div>
+
+</div>
+
+<script>
+const DADOS = [{"codigo": "", "nome": "", "preco": "", "precoBF": ""}, {"codigo": "CÓDIGO PRODUTO", "nome": "COMPLEMENTO", "preco": "PREÇO DE VENDA", "precoBF": "Preço Oulet (calculado)"}, {"codigo": "34034", "nome": "LUVA TUTTO VITA XL", "preco": "166,96", "precoBF": "83,48"}, {"codigo": "18414", "nome": "LUVA X11 IMPACT FEM C. LONGO COURO PTO G", "preco": "169,19", "precoBF": "105,91"}, {"codigo": "34267", "nome": "LUVA X11 NITRO3 TECIDO PRETO/VERMELHO GGG", "preco": "71,29", "precoBF": "35,65"}, {"codigo": "31606", "nome": "BOTA ALPINESTARS S-MX 6 V2 PRETO 41", "preco": "1.712,23", "precoBF": "856,12"}, {"codigo": "31686", "nome": "LUVA ALPINESTARS MASAI PRETO S", "preco": "376,69", "precoBF": "216,49"}, {"codigo": "31703", "nome": "LUVA ALPINESTARS SPARTAN PRETO 3XL", "preco": "379,69", "precoBF": "189,85"}, {"codigo": "31705", "nome": "LUVA ALPINESTARS SR-3 DRYSTAR PRETO M", "preco": "394,77", "precoBF": "197,39"}, {"codigo": "31704", "nome": "LUVA ALPINESTARS SR-3 DRYSTAR PRETO S", "preco": "394,77", "precoBF": "197,39"}, {"codigo": "31712", "nome": "LUVA ALPINESTARS STELLA SPARTAN PRETO M", "preco": "355,13", "precoBF": "177,57"}, {"codigo": "31711", "nome": "LUVA ALPINESTARS STELLA SPARTAN PRETO S", "preco": "355,13", "precoBF": "177,57"}, {"codigo": "31710", "nome": "LUVA ALPINESTARS STELLA SPARTAN PRETO XS", "preco": "355,13", "precoBF": "177,57"}, {"codigo": "31714", "nome": "LUVA ALPINESTARS STELLA SR-3 DRYSTAR PRETO S", "preco": "394,77", "precoBF": "197,39"}, {"codigo": "31716", "nome": "LUVA ALPINESTARS STELLA SR-3 DRYSTAR PRETO L", "preco": "394,77", "precoBF": "197,39"}, {"codigo": "31727", "nome": "LUVA ALPINESTARS STELLA TRANSITION DRYST PRETO/CINZA S", "preco": "527,96", "precoBF": "263,98"}, {"codigo": "31729", "nome": "LUVA ALPINESTARS STELLA TRANSITION DRYST PRETO/CINZA L", "preco": "527,96", "precoBF": "263,98"}, {"codigo": "31732", "nome": "LUVA ALPINESTARS TRANSITION DRYSTAR PRETO L", "preco": "527,96", "precoBF": "263,98"}, {"codigo": "31733", "nome": "LUVA ALPINESTARS TRANSITION DRYSTAR PRETO 2XL", "preco": "527,96", "precoBF": "263,98"}, {"codigo": "32058", "nome": "LUVA ALPINESTARS TRANSITION DRYSTAR PRETO S", "preco": "527,96", "precoBF": "263,98"}, {"codigo": "31992", "nome": "LUVA TUTTO MASTER PRETO M", "preco": "516,46", "precoBF": "286,15"}, {"codigo": "34031", "nome": "LUVA TUTTO MASTER PRETO XL", "preco": "356,69", "precoBF": "178,35"}, {"codigo": "34035", "nome": "LUVA TUTTO VITA S", "preco": "166,96", "precoBF": "83,48"}, {"codigo": "49997", "nome": "CAPACETE ASX CITY AIR SQUARE PRETO FOSCO/GRAFITE/VERMELHO 58", "preco": "498,80", "precoBF": "285,69"}, {"codigo": "34398", "nome": "CAPACETE AXXIS EAGLE EVO PRETO/VERMELHO 58", "preco": "604,36", "precoBF": "302,18"}, {"codigo": "32942", "nome": "CAPACETE LS2 FF323 ARROW R JOHN MCPHEE REPLICA 63/64", "preco": "2.244,10", "precoBF": "1.302,78"}, {"codigo": "37669", "nome": "CAPACETE MT REVENGE 2 MOTO 3 BRANCO 63/64", "preco": "1.017,66", "precoBF": "610,67"}, {"codigo": "37681", "nome": "CAPACETE MT REVENGE 2 STATUS BRANCO/VERMELHO 61/62", "preco": "1.017,66", "precoBF": "610,67"}, {"codigo": "31500", "nome": "LUVA X11 NITRO3 TECIDO PRETO/VERMELHO GG", "preco": "71,29", "precoBF": "42,77"}, {"codigo": "33895", "nome": "CALCA X11 EXTREME AIR FEMININA PRETO/ROSA 4G", "preco": "845,66", "precoBF": "507,40"}, {"codigo": "31389", "nome": "JAQUETA X11 EVO 3 PRETO P", "preco": "896,65", "precoBF": "537,99"}, {"codigo": "36706", "nome": "JAQUETA X11 IRON 2 FEMININA PRETO M", "preco": "713,05", "precoBF": "427,83"}, {"codigo": "31396", "nome": "JAQUETA X11 IRON 2 FEMININA PRETO/ROSA M", "preco": "713,05", "precoBF": "427,83"}, {"codigo": "31463", "nome": "LUVA X11 BLACKOUT PRETO/NEON GG", "preco": "101,91", "precoBF": "61,15"}, {"codigo": "36780", "nome": "CAPACETE LS2 FF323 ARROW R TECHNO BRANCO/AZUL/VERMELHO 56", "preco": "2.244,10", "precoBF": "1.346,46"}, {"codigo": "36781", "nome": "CAPACETE LS2 FF323 ARROW R TECHNO BRANCO/AZUL/VERMELHO 58", "preco": "2.244,10", "precoBF": "1.346,46"}, {"codigo": "38050", "nome": "CAPACETE MT ATOM SV QUARK AMARELO FOSCO/AZUL 58", "preco": "1.313,48", "precoBF": "793,27"}, {"codigo": "31149", "nome": "CAPACETE MT ATOM SV SOLID GLOSS BRANCO 58", "preco": "1.313,48", "precoBF": "793,27"}, {"codigo": "37668", "nome": "CAPACETE MT REVENGE 2 MOTO 3 BRANCO 61/62", "preco": "1.017,66", "precoBF": "610,67"}, {"codigo": "37682", "nome": "CAPACETE MT REVENGE 2 STATUS BRANCO/VERMELHO 63/64", "preco": "1.017,66", "precoBF": "610,67"}, {"codigo": "43908", "nome": "ORGANIZADOR TRIP CASE PRETO X11", "preco": "35,14", "precoBF": "24,60"}, {"codigo": "43146", "nome": "JAQUETA NORISK NR-01 PRETO/BRANCO M", "preco": "504,89", "precoBF": "353,42"}, {"codigo": "43290", "nome": "JAQUETA GP TECH ESSENCE FEMININA PRETO/CINZA P", "preco": "434,30", "precoBF": "304,01"}, {"codigo": "43294", "nome": "JAQUETA GP TECH ESSENCE FEMININA PRETO/CINZA G", "preco": "434,30", "precoBF": "304,01"}, {"codigo": "43164", "nome": "JAQUETA NORISK NR-01 LADY PRETO/BRANCO L", "preco": "504,89", "precoBF": "353,42"}, {"codigo": "43163", "nome": "JAQUETA NORISK NR-01 LADY PRETO/BRANCO M", "preco": "504,89", "precoBF": "353,42"}, {"codigo": "33892", "nome": "JAQUETA X11 ONE 2 FEMININA PRETO 3G", "preco": "604,99", "precoBF": "423,49"}, {"codigo": "33150", "nome": "JAQUETA X11 ONE 2 PRETO 4G", "preco": "604,99", "precoBF": "423,49"}, {"codigo": "33145", "nome": "JAQUETA X11 ONE 2 PRETO P", "preco": "604,99", "precoBF": "423,49"}, {"codigo": "39486", "nome": "JAQUETA X11 ONE 2 PRETO/CINZA/VERMELHO M", "preco": "604,99", "precoBF": "423,49"}, {"codigo": "36479", "nome": "CAPACETE X11 TRUST PRO TRANSIT AZUL/AMARELO 61/62", "preco": "579,94", "precoBF": "405,96"}, {"codigo": "32855", "nome": "CAPACETE AXXIS DRAKEN UK PRETO FOSCO/CINZA 60", "preco": "604,99", "precoBF": "423,49"}, {"codigo": "43667", "nome": "CAPACETE KYT TT COURSE TATI MERCADO 61/62", "preco": "857,48", "precoBF": "600,24"}, {"codigo": "43126", "nome": "CAPACETE LS2 FF358 ALEX BARROS 54", "preco": "799,24", "precoBF": "559,47"}, {"codigo": "32642", "nome": "CAPACETE LS2 FF397 VECTOR KRIPTON AZUL FOSCO/AMARELO 56", "preco": "1.530,03", "precoBF": "1.071,02"}, {"codigo": "32944", "nome": "CAPACETE LS2 FF397 VECTOR KRIPTON AZUL FOSCO/AMARELO 58", "preco": "1.530,03", "precoBF": "1.071,02"}, {"codigo": "32880", "nome": "CAPACETE LS2 FF397 VECTOR ORION PRETO FOSCO 60", "preco": "1.622,84", "precoBF": "1.135,99"}, {"codigo": "37655", "nome": "CAPACETE MT REVENGE 2 BAYE VERMELHO FOSCO/AMARELO 58", "preco": "1.017,67", "precoBF": "712,37"}, {"codigo": "37658", "nome": "CAPACETE MT REVENGE 2 BAYE VERMELHO FOSCO/AMARELO 63/64", "preco": "1.017,66", "precoBF": "712,36"}, {"codigo": "41167", "nome": "CAPACETE NORISK RAZOR AXIAL PRETO FOSCO/PRATA 56", "preco": "503,99", "precoBF": "352,79"}, {"codigo": "43073", "nome": "CAPACETE NORISK RAZOR NINJA AZUL FOSCO/AMARELO 56", "preco": "504,89", "precoBF": "353,42"}, {"codigo": "43088", "nome": "CAPACETE NORISK SUPRA AGUILA DOURADO 56", "preco": "555,40", "precoBF": "388,78"}, {"codigo": "37830", "nome": "CAPACETE X11 TRUST PRO BALLADS AZUL/ROSA 58 C/VISEIRA EXTRA", "preco": "579,94", "precoBF": "405,96"}, {"codigo": "9220", "nome": "MOCHILA PIZZA CACHORRO LOCCO 45 LTS", "preco": "146,45", "precoBF": "117,16"}, {"codigo": "45780", "nome": "PROTETOR LATERAL MT V26", "preco": "63,80", "precoBF": "51,04"}, {"codigo": "45565", "nome": "JAQUETA X11 ONE 2 FEMININA PRETO/CINZA/VERMELHO P", "preco": "551,00", "precoBF": "440,80"}, {"codigo": "31464", "nome": "LUVA X11 BLACKOUT 1/2 DEDO PRETO P", "preco": "91,71", "precoBF": "73,37"}, {"codigo": "31494", "nome": "LUVA X11 NITRO3 TECIDO PRETO/NEON M", "preco": "71,29", "precoBF": "57,03"}, {"codigo": "43295", "nome": "JAQUETA GP TECH ESSENCE FEMININA PRETO/CINZA GG", "preco": "434,30", "precoBF": "347,44"}, {"codigo": "43297", "nome": "JAQUETA GP TECH ESSENCE FEMININA PRETO/CINZA 3G", "preco": "434,30", "precoBF": "347,44"}, {"codigo": "43162", "nome": "JAQUETA NORISK NR-01 LADY PRETO/BRANCO S", "preco": "504,89", "precoBF": "403,91"}, {"codigo": "31385", "nome": "JAQUETA X11 EVO 3 FEMININA PRETO/ROSA P", "preco": "896,65", "precoBF": "717,32"}, {"codigo": "45613", "nome": "JAQUETA X11 ONE 2 FEMININA PRETO/CINZA/VERMELHO G", "preco": "551,00", "precoBF": "440,80"}, {"codigo": "33879", "nome": "JAQUETA X11 URBAN PRO PRETO P", "preco": "655,46", "precoBF": "524,37"}, {"codigo": "42551", "nome": "CAPACETE LS2 FF353 XTREET PRETO FOSCO/VERMELHO 61/62", "preco": "706,89", "precoBF": "565,51"}, {"codigo": "46060", "nome": "CAPACETE LS2 FF358 RAMPAGE VERDE 60", "preco": "799,24", "precoBF": "639,39"}, {"codigo": "45756", "nome": "CAPACETE KYT TT COURSE ELECTRON CINZA/VERMELHO 61/62", "preco": "810,84", "precoBF": "648,67"}, {"codigo": "44146", "nome": "CAPACETE KYT TT COURSE SUPER MARIO 61/62", "preco": "870,00", "precoBF": "696,00"}, {"codigo": "41254", "nome": "CAPACETE LS2 FF353 RAPID TAGLINE AZUL/AMARELO 56", "preco": "706,89", "precoBF": "565,51"}, {"codigo": "44302", "nome": "CAPACETE LS2 FF358 DRAZE BRANCO/VERDE/VERMELHO 56", "preco": "799,24", "precoBF": "639,39"}, {"codigo": "45173", "nome": "CAPACETE LS2 FF358 MONOCOLOR ROSA 54", "preco": "799,24", "precoBF": "639,39"}, {"codigo": "46058", "nome": "CAPACETE LS2 FF358 RAMPAGE VERDE 56", "preco": "799,24", "precoBF": "639,39"}, {"codigo": "46395", "nome": "CAPACETE MT STINGER 2 GRAND PRIX FRANCE 60", "preco": "698,99", "precoBF": "559,19"}, {"codigo": "46290", "nome": "CAPACETE ASX CITY KINGDOM BRANCO/VERMELHO/AZUL 56", "preco": "440,80", "precoBF": "352,64"}, {"codigo": "46350", "nome": "CAPACETE ASX DRAKEN STRIKER PRETO/AZUL/VERMELHO 63/64", "preco": "598,99", "precoBF": "479,19"}, {"codigo": "46542", "nome": "CAPACETE ASX DRAKEN THUNDER BRILHO PRATA/AZUL/VERMELHO 61/62", "preco": "578,84", "precoBF": "463,07"}, {"codigo": "46546", "nome": "CAPACETE ASX DRAKEN THUNDER FOSCO PRETO/VERDE/LARANJA 58", "preco": "578,84", "precoBF": "463,07"}, {"codigo": "47657", "nome": "CAPACETE ASX EAGLE SV FAST PRETO/CINZA/AMARELO 56", "preco": "696,00", "precoBF": "556,80"}, {"codigo": "41819", "nome": "CAPACETE AXXIS DRAKEN SOLID TIFFANY 56", "preco": "604,99", "precoBF": "483,99"}, {"codigo": "45734", "nome": "CAPACETE AXXIS SEGMENT APOLO NOW C7 AZUL 60", "preco": "533,60", "precoBF": "426,88"}, {"codigo": "45740", "nome": "CAPACETE AXXIS SEGMENT APOLO RAY B7 AZUL 61/62", "preco": "533,60", "precoBF": "426,88"}, {"codigo": "45752", "nome": "CAPACETE KYT NF-J DENNIS FOGGIA LEOPARD REPLICA 56", "preco": "899,00", "precoBF": "719,20"}, {"codigo": "45754", "nome": "CAPACETE KYT NF-J DENNIS FOGGIA LEOPARD REPLICA 60", "preco": "899,00", "precoBF": "719,20"}, {"codigo": "45671", "nome": "CAPACETE KYT R2R LED PRETO FOSCO/VERMELHO 60", "preco": "1.298,99", "precoBF": "1.039,19"}, {"codigo": "45672", "nome": "CAPACETE KYT R2R LED PRETO FOSCO/VERMELHO 61/62", "preco": "1.298,04", "precoBF": "1.038,43"}, {"codigo": "45675", "nome": "CAPACETE KYT R2R MAX FERNANDEZ 22 REPLICA FOSCO 58", "preco": "1.398,99", "precoBF": "1.119,19"}, {"codigo": "45676", "nome": "CAPACETE KYT R2R MAX FERNANDEZ 22 REPLICA FOSCO 60", "preco": "1.398,99", "precoBF": "1.119,19"}, {"codigo": "45677", "nome": "CAPACETE KYT R2R MAX FERNANDEZ 22 REPLICA FOSCO 61/62", "preco": "1.397,80", "precoBF": "1.118,24"}, {"codigo": "45759", "nome": "CAPACETE KYT R2R STRAIGHT E06 60", "preco": "1.393,16", "precoBF": "1.114,53"}, {"codigo": "45760", "nome": "CAPACETE KYT R2R STRAIGHT E06 61/62", "preco": "1.393,16", "precoBF": "1.114,53"}, {"codigo": "45755", "nome": "CAPACETE KYT TT COURSE ELECTRON CINZA/VERMELHO 60", "preco": "810,84", "precoBF": "648,67"}, {"codigo": "44154", "nome": "CAPACETE KYT TT COURSE ELECTRON PRETO FOSCO/AMARELO 61/62", "preco": "810,84", "precoBF": "648,67"}, {"codigo": "45747", "nome": "CAPACETE KYT TT COURSE GEAR PRETO/AMARELO 60", "preco": "799,00", "precoBF": "639,20"}, {"codigo": "46380", "nome": "CAPACETE KYT TT COURSE RADIANCE 61/62", "preco": "870,00", "precoBF": "696,00"}, {"codigo": "44150", "nome": "CAPACETE KYT TT COURSE XAVIER SIMEON ENDURANCE CHAMPION 61/62", "preco": "857,48", "precoBF": "685,98"}, {"codigo": "43846", "nome": "CAPACETE LS2 FF320 STREAM MARA PRETO FOSCO/AMARELO 58", "preco": "908,89", "precoBF": "727,11"}, {"codigo": "34138", "nome": "CAPACETE LS2 FF353 RAPID ALEX BARROS REPLICA AZUL 56", "preco": "799,89", "precoBF": "639,91"}, {"codigo": "31529", "nome": "CAPACETE LS2 FF353 RAPID BRAVADO PRETO/CINZA 61/62", "preco": "706,89", "precoBF": "565,51"}, {"codigo": "41273", "nome": "CAPACETE LS2 FF353 RAPID FLAG NEON FUCSIA 54", "preco": "706,89", "precoBF": "565,51"}, {"codigo": "36788", "nome": "CAPACETE LS2 FF353 RAPID FLAG PRETO 56", "preco": "699,90", "precoBF": "559,92"}, {"codigo": "32947", "nome": "CAPACETE LS2 FF353 RAPID MONOCOLOR TITANIUM FOSCO 56", "preco": "699,90", "precoBF": "559,92"}, {"codigo": "33472", "nome": "CAPACETE LS2 FF353 RAPID SLIDE AZUL FOSCO/VERMELHO 60", "preco": "706,89", "precoBF": "565,51"}, {"codigo": "33477", "nome": "CAPACETE LS2 FF353 RAPID SPY PRETO/PRATA 56", "preco": "706,89", "precoBF": "565,51"}, {"codigo": "41256", "nome": "CAPACETE LS2 FF353 RAPID TAGLINE AZUL/AMARELO 60", "preco": "706,89", "precoBF": "565,51"}, {"codigo": "41257", "nome": "CAPACETE LS2 FF353 RAPID TAGLINE AZUL/AMARELO 61/62", "preco": "706,89", "precoBF": "565,51"}, {"codigo": "47378", "nome": "CAPACETE LS2 FF358 MONOCOLOR AREIA FOSCO 56", "preco": "799,24", "precoBF": "639,39"}, {"codigo": "47380", "nome": "CAPACETE LS2 FF358 MONOCOLOR AREIA FOSCO 60", "preco": "799,24", "precoBF": "639,39"}, {"codigo": "45162", "nome": "CAPACETE LS2 FF358 MONOCOLOR ROSA 61/62", "preco": "799,24", "precoBF": "639,39"}, {"codigo": "47285", "nome": "CAPACETE LS2 FF358 S MONOCOLOR PRETO 54 C/SPOILER", "preco": "799,24", "precoBF": "639,39"}, {"codigo": "40403", "nome": "CAPACETE LS2 FF358 TRIBAL AMARELO 56", "preco": "799,24", "precoBF": "639,39"}, {"codigo": "45506", "nome": "CAPACETE LS2 FF800 STORM POWER PRETO FOSCO/RAINBOW 60", "preco": "1.299,90", "precoBF": "1.039,92"}, {"codigo": "47294", "nome": "CAPACETE LS2 FF811 VECTOR II ABSOLUTE PRETO FOSCO/VERMELHO/AZUL 61/62", "preco": "2.030,00", "precoBF": "1.624,00"}, {"codigo": "47289", "nome": "CAPACETE LS2 FF811 VECTOR II MONOCOLOR PRETO FOSCO 60", "preco": "2.030,00", "precoBF": "1.624,00"}, {"codigo": "47420", "nome": "CAPACETE LS2 FF811 VECTOR II SPLITTER FOSCO/TITANIO/VERMELHO 58", "preco": "2.030,00", "precoBF": "1.624,00"}, {"codigo": "47422", "nome": "CAPACETE LS2 FF811 VECTOR II SPLITTER FOSCO/TITANIO/VERMELHO 61/62", "preco": "2.030,00", "precoBF": "1.624,00"}, {"codigo": "46396", "nome": "CAPACETE MT STINGER 2 GRAND PRIX FRANCE 61/62", "preco": "698,99", "precoBF": "559,19"}, {"codigo": "46405", "nome": "CAPACETE MT STINGER 2 GRAND PRIX HOLANDA 60", "preco": "698,99", "precoBF": "559,19"}, {"codigo": "46406", "nome": "CAPACETE MT STINGER 2 GRAND PRIX HOLANDA 61/62", "preco": "698,95", "precoBF": "559,16"}, {"codigo": "46387", "nome": "CAPACETE MT STINGER 2 GRAND PRIX ITALY 61/62", "preco": "698,99", "precoBF": "559,19"}, {"codigo": "46410", "nome": "CAPACETE MT STINGER 2 GRAND PRIX JAPAN 60", "preco": "698,99", "precoBF": "559,19"}, {"codigo": "46934", "nome": "CAPACETE MT TARGO S PEDRO ACOSTA 23 A7 FOSCO 58", "preco": "899,89", "precoBF": "719,91"}, {"codigo": "46939", "nome": "CAPACETE MT TARGO S DIOGO MOREIRA C7 FOSCO 58", "preco": "899,89", "precoBF": "719,91"}, {"codigo": "46413", "nome": "CAPACETE MT THUNDER 4 DRAX AZUL 56", "preco": "1.350,01", "precoBF": "1.080,01"}, {"codigo": "46421", "nome": "CAPACETE MT THUNDER 4 ERGO AZUL 60", "preco": "1.349,98", "precoBF": "1.079,98"}, {"codigo": "46429", "nome": "CAPACETE MT THUNDER 4 LABYRINTH CINZA FOSCO 56", "preco": "1.349,98", "precoBF": "1.079,98"}, {"codigo": "46430", "nome": "CAPACETE MT THUNDER 4 LABYRINTH CINZA FOSCO 58", "preco": "1.349,98", "precoBF": "1.079,98"}, {"codigo": "46431", "nome": "CAPACETE MT THUNDER 4 LABYRINTH CINZA FOSCO 60", "preco": "1.349,98", "precoBF": "1.079,98"}, {"codigo": "41150", "nome": "CAPACETE NORISK DARTH MONOCOLOR PRETO 58", "preco": "656,39", "precoBF": "525,11"}, {"codigo": "43814", "nome": "CAPACETE NORISK DOWNTOWN MONO AZUL 58", "preco": "699,90", "precoBF": "559,92"}, {"codigo": "32865", "nome": "CAPACETE NORISK FORCE MONOCOLOR AZUL FOSCO 56", "preco": "807,89", "precoBF": "646,31"}, {"codigo": "39508", "nome": "CAPACETE NORISK MOTION MONOCOLOR PRETO FOSCO 60", "preco": "749,89", "precoBF": "599,91"}, {"codigo": "45639", "nome": "CAPACETE NORISK RAZOR CIRCUS AZUL/AMARELO 56", "preco": "550,13", "precoBF": "440,10"}, {"codigo": "45974", "nome": "CAPACETE NORISK RAZOR GODSPEED AZUL FOSCO/AMARELO 56", "preco": "550,13", "precoBF": "440,10"}, {"codigo": "43074", "nome": "CAPACETE NORISK RAZOR NINJA AZUL FOSCO/AMARELO 58", "preco": "504,89", "precoBF": "403,91"}, {"codigo": "41316", "nome": "CAPACETE NORISK SUPRA USA 56", "preco": "555,40", "precoBF": "444,32"}];
+
+function buscar() {
+    const cod = codigo.value.trim();
+    const res = document.getElementById("resultado");
+
+    if (!cod) { res.style.display = "none"; return; }
+
+    const item = DADOS.find(p => p.codigo === cod);
+
+    if (!item) {
+        res.style.display = "block";
+        res.innerHTML = "<h3 style='color:#ff6666'>❌ Produto não encontrado</h3>";
+        return;
+    }
+
+    res.style.display = "block";
+    res.innerHTML = `
+        <h3>${item.nome}</h3>
+        <p><b>Preço Normal:</b> R$ ${item.preco}</p>
+        <p class="preco-bf">🔥 Black Friday: R$ ${item.precoBF}</p>
+    `;
+
+    codigo.blur(); // fecha teclado
+}
+
+codigo.addEventListener("input", buscar);
+
+function limpar() {
+    codigo.value = "";
+    resultado.style.display = "none";
+    codigo.focus(); // reabre teclado
+}
+</script>
+
+</body>
+</html>
